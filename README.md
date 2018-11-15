@@ -60,14 +60,8 @@ void foo()
 
 The `i.foo()` calls will call the underlying object's `foo()`
 
-## Example 2
-
 ````c++
 using Foobarer = INTERFACE(void(), foo, void(int), bar);
-struct S {
-  void foo() {}
-  void bar(int) {}
-};
 
 void foobar()
 {
@@ -78,6 +72,23 @@ void foobar()
 ````
 
 `interface` supports multiple methods.
+
+## Example 2
+
+````c++
+using Fooer = INTERFACE(void(), foo);
+struct Q
+{
+  int foo(double = 42.0)
+  {
+    return 42;
+  }
+};
+
+Fooer f = Q{};
+````
+
+Functions only need to be sufficiently similar.
 
 ## Example 3
 
