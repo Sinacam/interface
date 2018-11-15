@@ -93,7 +93,7 @@ Functions only need to be sufficiently similar.
 ## Example 3
 
 ````c++
-using interface = INTERFACE(void(), answer);
+using I = INTERFACE(void(), answer);
 struct S {
   int n = 0;
   void answer() { n = 42; }
@@ -102,7 +102,7 @@ struct S {
 void meaning()
 {
   S s;
-  interface i = s;
+  I i = s;
   i.answer();
   assert(s.n == 0);
   i = &s;
@@ -111,7 +111,7 @@ void meaning()
 }
 ````
 
-Pointers gives `interface` reference semantics.
+Pointers gives `I` reference semantics.
 
 ## Example 4
 
