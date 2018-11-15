@@ -5,12 +5,10 @@
 // Implementaion namespace.
 namespace interface_detail
 {
-    using namespace ::std;  // To improve readability.
-
     struct interface_tag {}; // As extra parameter for certain implementation functions to avoid namespace pollution.
 
     template<typename T>
-    struct is_interface : is_base_of<interface_tag, T> {};
+    struct is_interface : std::is_base_of<interface_tag, T> {};
 
     template<typename T>
     inline static constexpr bool is_interface_v = is_interface<T>::value;
@@ -34,10 +32,10 @@ namespace interface_detail
         using return_type = Ret;
         static constexpr Ret value(void* p, Args... args)
         {
-            if constexpr(is_void_v<Ret>)
-                Factory::call(p, forward<Args>(args)...);
+            if constexpr(std::is_void_v<Ret>)
+                Factory::call(p, std::forward<Args>(args)...);
             else
-                return Factory::call(p, forward<Args>(args)...);
+                return Factory::call(p, std::forward<Args>(args)...);
         };
     };
 
@@ -46,7 +44,7 @@ namespace interface_detail
     template<typename T>
     decltype(auto) as_object(void* p)
     {
-        if constexpr(is_pointer_v<T>)
+        if constexpr(std::is_pointer_v<T>)
             return **static_cast<T*>(p);
         else
             return *static_cast<T*>(p);
@@ -58,7 +56,7 @@ namespace interface_detail
         void (*copy)(void* dst, const void* src) = nullptr;
         void (*move)(void* dst, void* src) = nullptr;
         void (*destroy)(void* p) noexcept = nullptr;
-        size_t size = 0;
+        std::size_t size = 0;
     };
 
     // Address of t acts as RTTI.
@@ -70,7 +68,7 @@ namespace interface_detail
                 new (dst) T{*static_cast<const T*>(src)};
             },
             [](void* dst, void* src) {
-                new (dst) T{move(*static_cast<T*>(src))};
+                new (dst) T{std::move(*static_cast<T*>(src))};
             },
             [](void* p) noexcept {
                 static_cast<T*>(p)->~T();
@@ -115,6 +113,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     // interface_tag used to avoid namespace pollution, however improbable.
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)
     {
+        using std::get;
         return get<0>(i._vtable);
     }
 
@@ -188,8 +187,8 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     INTERFACE_APPEND_LINE(_interface)
     (T&& t)
     {
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);
         using U = ::std::decay_t<T>;
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);
 
         // Exception safe buffer allocation.
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);
@@ -283,6 +282,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -332,8 +332,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
@@ -414,6 +414,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -428,6 +429,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<1>(i._vtable);\
     }\
 \
@@ -478,8 +480,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
@@ -566,6 +568,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -580,6 +583,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<1>(i._vtable);\
     }\
 \
@@ -594,6 +598,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<2>(i._vtable);\
     }\
 \
@@ -645,8 +650,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
@@ -739,6 +744,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -753,6 +759,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<1>(i._vtable);\
     }\
 \
@@ -767,6 +774,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<2>(i._vtable);\
     }\
 \
@@ -781,6 +789,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<3>(i._vtable);\
     }\
 \
@@ -833,8 +842,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
@@ -933,6 +942,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -947,6 +957,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<1>(i._vtable);\
     }\
 \
@@ -961,6 +972,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<2>(i._vtable);\
     }\
 \
@@ -975,6 +987,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<3>(i._vtable);\
     }\
 \
@@ -989,6 +1002,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<4>(i._vtable);\
     }\
 \
@@ -1042,8 +1056,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
@@ -1148,6 +1162,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -1162,6 +1177,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<1>(i._vtable);\
     }\
 \
@@ -1176,6 +1192,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<2>(i._vtable);\
     }\
 \
@@ -1190,6 +1207,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<3>(i._vtable);\
     }\
 \
@@ -1204,6 +1222,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<4>(i._vtable);\
     }\
 \
@@ -1218,6 +1237,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME5(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<5>(i._vtable);\
     }\
 \
@@ -1272,8 +1292,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
@@ -1384,6 +1404,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -1398,6 +1419,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<1>(i._vtable);\
     }\
 \
@@ -1412,6 +1434,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<2>(i._vtable);\
     }\
 \
@@ -1426,6 +1449,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<3>(i._vtable);\
     }\
 \
@@ -1440,6 +1464,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<4>(i._vtable);\
     }\
 \
@@ -1454,6 +1479,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME5(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<5>(i._vtable);\
     }\
 \
@@ -1468,6 +1494,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME6(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<6>(i._vtable);\
     }\
 \
@@ -1523,8 +1550,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
@@ -1641,6 +1668,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<0>(i._vtable);\
     }\
 \
@@ -1655,6 +1683,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<1>(i._vtable);\
     }\
 \
@@ -1669,6 +1698,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<2>(i._vtable);\
     }\
 \
@@ -1683,6 +1713,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<3>(i._vtable);\
     }\
 \
@@ -1697,6 +1728,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<4>(i._vtable);\
     }\
 \
@@ -1711,6 +1743,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME5(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<5>(i._vtable);\
     }\
 \
@@ -1725,6 +1758,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME6(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<6>(i._vtable);\
     }\
 \
@@ -1739,6 +1773,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     };\
     friend auto get_##METHOD_NAME7(const interface& i, ::interface_detail::interface_tag)\
     {\
+        using std::get;\
         return get<7>(i._vtable);\
     }\
 \
@@ -1795,8 +1830,8 @@ public:\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
-        static_assert(alignof(T) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         using U = ::std::decay_t<T>;\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
