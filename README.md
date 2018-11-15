@@ -155,7 +155,7 @@ Works with templates as well.
 
 ````c++
 using Fooer = INTERFACE(void(), foo);
-using Foobarer = INTERFACE(void(int), bar);
+using Foobarer = INTERFACE(void(), foo, void(int), bar);
 struct S {
   void foo() {} 
   void bar(int) {}
