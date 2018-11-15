@@ -6,7 +6,7 @@ It's syntax is
 INTERFACE(signature 0, method name 0, signature 1, method name 1, ...)
 ````
 
-which is an unique anonymous type which holds anything with methods matching the specified name and sufficiently similar signature.
+which is an anonymous type which holds anything with methods matching the specified name and sufficiently similar signature.
 The rules of similarity follows that of `std::function`.
 
 `using I = INTERFACE(sig0, id0, sig1, id1, ...)` is equivalent to the go construct
@@ -171,4 +171,8 @@ There is no conversion between different interfaces unless one is a subset of an
 ## Well-definedness
 
 Invokes no undefined behaviour that I am aware of (including arcane pointer rules).
+
+## Anonymous type
+
+Actually, the type is a name appended with the line number. It is therefore advised to avoid defining `INTERFACE` in different translation units in the same namespace to avoid odr violations.
 
