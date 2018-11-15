@@ -183,9 +183,10 @@ There is no conversion between different interfaces unless one is a subset of an
 #### `friend swap(interface& x, interface& y)`
 Swaps the contents of the interfaces.
 
-#### `template<typename T, typename I> T* target(I&& i)`
+#### `template<typename T, typename I> /* const */ T* target(I&& i)`
 Returns a pointer to the underlying object of `i`. Returns `nullptr` if type doesn't match.  
 Call `target<T*>` to retrieve the object from an interface storing a pointer to `T`, its resulting type is `T**`.  
+Returns a `const` qualified pointer if `I` is `const` qualified.  
 Only participates in overload resolution if `I` is an interface.  
 
 ## Well-definedness
