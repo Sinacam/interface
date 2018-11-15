@@ -128,7 +128,7 @@ The alias is necessary since macros don't respect angle brackets.
 INTERFACE(void(std::pair<int, float>), also_works);
 ````
 
-An alias isn't needed here because it's within brackets.
+An alias isn't needed here because it's within parentheses.
 
 ## Example 5
 
