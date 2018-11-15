@@ -163,7 +163,7 @@ Constructs an interface from `t` that have methods similar to interface methods.
 #### `friend T* target<T>(interface&& i)`
 #### `friend T* target<T>(interface& i)`
 #### `friend const T* target<T>(const interface& i)`
-Returns a pointer to the underlying object. Returns `nullptr` if type doesn't match.
+Returns a pointer to the underlying object. Returns `nullptr` if type doesn't match.  
 A declaration of `target` must be visible at the call site. `using adl_helper::target;` can be used.
 
 #### `operator bool()`
