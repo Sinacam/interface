@@ -5,7 +5,7 @@
 // Implementaion namespace.
 namespace interface_detail
 {
-    using namespace ::std;  // To improve readability.
+    using namespace ::std;  // To improve readability. Has no other dependencies.
 
     struct interface_tag {}; // As extra parameter for certain implementation functions to avoid namespace pollution.
 
