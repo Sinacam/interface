@@ -93,11 +93,19 @@ namespace interface_detail
     }
 }
 
-namespace adl_helper
+// Fetches underlying type if thunk* matches, which serves as RTTI.
+template<typename T, typename I, 
+         std::enable_if_t<::interface_detail::is_interface_v<std::decay_t<I>>, bool> = false>
+auto target(I&& i)
 {
-    // Used only for ADL.
-    template<typename T, typename I>
-    T* target(I&&);
+    using R = std::conditional_t<std::is_const_v<std::decay_t<I>>, const T*, T*>;
+    auto t = fetch_thunk(i, ::interface_detail::interface_tag{});
+    auto p = fetch_pointer(i, ::interface_detail::interface_tag{});
+
+    if(t == ::interface_detail::get_thunk<T>())
+        return reinterpret_cast<R>(p);
+    else
+        return R{nullptr};
 }
 
 // For creating anonymous variables.
@@ -138,10 +146,12 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         }
     };
 
+    // Used in target.
     // Used in converting from one interface to another to bypass access level.
     // interface_tag used to avoid namespace pollution, however improbable.
     friend auto fetch_ptr(const interface& i, ::interface_detail::interface_tag) { return i._ptr; }
 
+    // Used in target.
     // Used in converting from one interface to another to bypass access level.
     // interface_tag used to avoid namespace pollution, however improbable.
     friend auto&& fetch_thunk(const interface& i, ::interface_detail::interface_tag)
@@ -232,32 +242,6 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         // Dispatches to type erased method call.
         return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(
             _ptr, ::std::forward<Args>(args)...);
-    }
-
-    // Fetches underlying type if thunk* matches, which serves as RTTI.
-    template <typename T>
-    friend T* target(interface&& i)
-    {
-        if(i._t == ::interface_detail::get_thunk<T>())
-            return reinterpret_cast<T*>(i._ptr);
-        else
-            return nullptr;
-    }
-    template <typename T>
-    friend T* target(interface& i)
-    {
-        if(i._t == ::interface_detail::get_thunk<T>())
-            return reinterpret_cast<T*>(i._ptr);
-        else
-            return nullptr;
-    }
-    template <typename T>
-    friend const T* target(const interface& i)
-    {
-        if(i._t == ::interface_detail::get_thunk<T>())
-            return reinterpret_cast<T*>(i._ptr);
-        else
-            return nullptr;
     }
 
     operator bool() const { return _ptr; }
