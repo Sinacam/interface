@@ -151,6 +151,22 @@ struct S {
 
 Works with templates as well.
 
+## Example 7
+
+````c++
+using Fooer = INTERFACE(void(), foo);
+using Foobarer = INTERFACE(void(int), bar);
+struct S {
+  void foo() {} 
+  void bar(int) {}
+};
+
+Foobarer fb = S{};
+Fooer f = fb;
+````
+
+There exists a conversion from an interface to another subset interface. The resulting `f` is the same as constructing from `S{}` directly.
+
 ## Other functions
 
 #### `interface(T&& t)`
