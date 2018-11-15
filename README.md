@@ -1,6 +1,6 @@
 # interface
 `interface` does the exact same thing as go's interface in c++.
-It's syntax is
+Its syntax is
 
 ````c++
 INTERFACE(signature 0, method name 0, signature 1, method name 1, ...)
