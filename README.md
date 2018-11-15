@@ -167,25 +167,26 @@ Fooer f = fb;
 
 There exists a conversion from an interface to another subset interface. The resulting `f` is the same as constructing from `S{}` directly.
 
-## Other functions
+## Other member functions
 
 #### `interface(T&& t)`
 Constructs an interface from `t` that have methods similar to interface methods. Similarity follows that of `std::function`.
 
-#### `friend T* target<T>(interface&& i)`
-#### `friend T* target<T>(interface& i)`
-#### `friend const T* target<T>(const interface& i)`
-Returns a pointer to the underlying object. Returns `nullptr` if type doesn't match.  
-A declaration of `target` must be visible at the call site. `using adl_helper::target;` can be used.
-
 #### `operator bool()`
 Tests whether the interface holds anything.
+
+All other special member functions all behave like they should.
+There is no conversion between different interfaces unless one is a subset of another.
+
+## Non-member functions
 
 #### `friend swap(interface& x, interface& y)`
 Swaps the contents of the interfaces.
 
-All other special member functions all behave like they should.
-There is no conversion between different interfaces unless one is a subset of another.
+#### `template<typename T, typename I> T* target(I&& i)`
+Returns a pointer to the underlying object of `i`. Returns `nullptr` if type doesn't match.  
+Call `target<T*>` to retrieve the object from an interface storing a pointer to `T`, its resulting type is `T**`.  
+Only participates in overload resolution if `I` is an interface.  
 
 ## Well-definedness
 
