@@ -23,7 +23,7 @@ type I interface {
 
 `interface` is a header only library. Just `#include "interface.hpp"`.
 
-## General constraints
+## General remarks
 
 `interface` methods may not be overloaded.
 
@@ -31,11 +31,9 @@ Can be defined at namespace and class scope, but not at function scope.
 
 Must have at least one method. Use `std::any` instead for empty interfaces.
 
-Pointers to objects give `interface` reference semantics.
+Pointers to objects give `interface` reference semantics. Otherwise, the stored type must be copy constructible.
 
 Requires C++17.
-
-Uses a lot of macros. If you hate that, support and help standardize Herb Sutter's metaclasses.
 
 Has a default maximum of 8 methods in the interface. See impl/README for details.
 
