@@ -9,7 +9,7 @@ INTERFACE(signature 0, method name 0, signature 1, method name 1, ...)
 which is an anonymous type which holds anything with methods matching the specified name and sufficiently similar signature.
 The rules of similarity follows that of `std::function`.
 
-`using I = INTERFACE(sig0, id0, sig1, id1, ...)` is equivalent to the go construct
+`using I = INTERFACE(sig0, id0, sig1, id1, ...);` is equivalent to the go construct
 
 ````go
 type I interface {
