@@ -131,8 +131,6 @@ INTERFACE(interface&&(*(std::vector<interface>&, interface*(*)[10]))(), this_is_
 
 `interface` refers to the type itself within its definition.
 
-## Example 6
-
 ````c++
 using bad_signature = void(std::map<string, interface>);
 INTERFACE(bad_signature, fails);
@@ -144,7 +142,7 @@ INTERFACE(good_signature<interface>, works);
 
 `interface` isn't visible outside its definition.
 
-## Example 7
+## Example 6
 
 ````c++
 template<typename... Ts>
