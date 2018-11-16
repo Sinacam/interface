@@ -293,7 +293,8 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     explicit operator bool() const noexcept { return _ptr; }
 
     // Returns true iff both interfaces are empty or both references the same object.
-    bool operator==(const interface& rhs) const noexcept
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>
+    bool operator==(I&& rhs) const noexcept
     {
         if(!_ptr)
             return !rhs._ptr;
@@ -301,7 +302,8 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);
         return false;
     }
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }
 
     friend void swap(interface& x, interface& y) noexcept
     {
@@ -458,7 +460,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -466,7 +469,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -640,7 +644,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -648,7 +653,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -844,7 +850,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -852,7 +859,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1070,7 +1078,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1078,7 +1087,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1318,7 +1328,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1326,7 +1337,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1588,7 +1600,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1596,7 +1609,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1880,7 +1894,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1888,7 +1903,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -2194,7 +2210,8 @@ public:\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    bool operator==(const interface& rhs) const noexcept\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator==(I&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -2202,7 +2219,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
+    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
