@@ -180,13 +180,30 @@ Fooer f = fb;
 
 There exists a conversion from an interface to another subset interface. The resulting `f` is the same as constructing from `S{}` directly.
 
-## Other member functions
+## Member functions
 
 #### `template<typename T> interface(T&& t)`
 Constructs an interface from `t` that have methods similar to interface methods. Similarity follows that of `std::function`.
 
+#### `signature method_name`
+`method_name` are the methods passed in as arguments to the interface.  
+Calls the underlying object's method with the same name and sufficiently similar signature selected through overload resolution. The return type does not participate in resolution and must be convertible to the interface return type.
+````c++
+using I = INTERFACE(void(int), f);
+struct S {
+  int f(int) {};
+  void f(char) {};
+};
+
+I{S{}}.f();  // calls f(int)
+````
+
 #### `operator bool()`
 Tests whether the interface holds anything.
+
+#### `bool operator==(const interface&)`
+#### `bool operator!=(const interface&)`
+Two interfaces compare equal iff they are both empty or refer to the same object.
 
 All other special member functions all behave like they should.
 There is no conversion between different interfaces unless one is a subset of another.
