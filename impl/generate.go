@@ -167,7 +167,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     // This is both the copy constructor and the converting constructor from other superset
     // interfaces.
     template <typename I,
-              ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>>* = nullptr>
+              ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>
     INTERFACE_APPEND_LINE(_interface)
     (I&& i)
     {
@@ -202,7 +202,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     // SFINAE on whether argument is an interface.
     // This is the conversion from any type to an interface.
     template <typename T,
-              ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>
+              ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>
     INTERFACE_APPEND_LINE(_interface)
     (T&& t)
     {
@@ -355,7 +355,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 public:\
     INTERFACE_APPEND_LINE(_interface)() = default;\
     INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>>* = nullptr>\
+    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
     INTERFACE_APPEND_LINE(_interface)(I&& i)\
     {\
         if(!i)\
@@ -377,7 +377,7 @@ public:\
             {{- end}}
         };\
     }\
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>>* = nullptr>\
+    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
