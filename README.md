@@ -200,7 +200,7 @@ struct S {
 
 void f()
 {
-  I{S{}}.f();  // calls f(int)
+  I{S{}}.f(42);  // calls f(int)
 }
 ````
 
