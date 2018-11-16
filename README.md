@@ -183,7 +183,10 @@ There exists a conversion from an interface to another subset interface. The res
 ## Member functions
 
 #### `template<typename T> interface(T&& t)`
-Constructs an interface from `t` that have methods similar to interface methods. Similarity follows that of `std::function`.
+Constructs an interface from `t` that have methods similar to interface methods. Similarity follows that of `std::function`. Only participates in overload resolution if `T` isn't an interface.
+
+#### `template<typename I> interface(I&& i)`
+Constructs an interface from another interface `I` that must have a superset of methods. Only participates in overload resolution if `I` is an interface.
 
 #### `signature method_name`
 `signature` and `method_name` are arguments passed in to the interface.  
@@ -223,7 +226,7 @@ Can only be found by ADL, use `using ::target;` to enable if `target` is shadowe
 
 ## Well-definedness
 
-Invokes no undefined behaviour that I am aware of (including arcane pointer rules).
+Invokes no undefined behaviour that I am aware of.
 
 ## Anonymous type
 
