@@ -113,7 +113,7 @@ void meaning()
 }
 ````
 
-Pointers gives `I` reference semantics.
+Objects give `I` value semantics, pointers give `I` reference semantics.
 
 ## Example 4
 
