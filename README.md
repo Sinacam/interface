@@ -201,23 +201,23 @@ struct S {
 I{S{}}.f();  // calls f(int)
 ````
 
-#### `operator bool()`
+#### `operator bool() const noexcept`
 Tests whether the interface holds anything.
 
-#### `bool operator==(const interface&)`
-#### `bool operator!=(const interface&)`
+#### `bool operator==(const interface&) const noexcept`
+#### `bool operator!=(const interface&) const noexcept`
 Two interfaces compare equal iff they are both empty or refer to the same object.
 
 All other special member functions all behave like they should.
 
 ## Non-member functions
 
-#### `friend swap(interface& x, interface& y)`
+#### `friend void swap(interface& x, interface& y) noexcept`
 Swaps the contents of the interfaces.
 
-#### `template<typename T> friend T* target(interface&& i)`
-#### `template<typename T> friend T* target(interface& i)`
-#### `template<typename T> friend const T* target(const interface& i)`
+#### `template<typename T> friend T* target(interface&& i) noexcept`
+#### `template<typename T> friend T* target(interface& i) noexcept`
+#### `template<typename T> friend const T* target(const interface& i) noexcept`
 Returns a pointer to the underlying object of `i`. Returns `nullptr` if type doesn't match.  
 Call `target<T*>` to retrieve the object from an interface storing a pointer to `T`, its resulting type is `T**`.  
 Returns a `const` qualified pointer if `I` is `const` qualified.  
