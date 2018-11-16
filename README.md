@@ -186,7 +186,7 @@ There exists a conversion from an interface to another subset interface. The res
 Constructs an interface from `t` that have methods similar to interface methods. Similarity follows that of `std::function`.
 
 #### `signature method_name`
-`method_name` are the methods passed in as arguments to the interface.  
+`signature` and `method_name` are arguments passed in to the interface.  
 Calls the underlying object's method with the same name and sufficiently similar signature selected through overload resolution. The return type does not participate in resolution and must be convertible to the interface return type.
 ````c++
 using I = INTERFACE(void(int), f);
