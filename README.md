@@ -140,7 +140,7 @@ INTERFACE(void(std::vector<interface>), still_works);
 INTERFACE(interface&&(*(std::vector<interface>&, interface*(*)[10]))(), this_is_fine);
 ````
 
-`interface` refers to the type itself within its definition.
+`interface` refers to the type itself within its definition, similar to `this`.
 
 ````c++
 using bad_signature = void(std::map<string, interface>);
