@@ -69,7 +69,7 @@ namespace interface_detail
     };
 
     // Address of t acts as RTTI.
-    template<typename T>
+    template<typename T, bool = std::is_constructible_v<T, const T&>>
     struct thunk_storage
     {
         inline static constexpr thunk t = {
@@ -79,6 +79,18 @@ namespace interface_detail
             [](void* dst, void* src) {
                 new (dst) T{std::move(*static_cast<T*>(src))};
             },
+            [](void* p) noexcept {
+                static_cast<T*>(p)->~T();
+            },
+            sizeof(T)
+        };
+    };
+    template<typename T>
+    struct thunk_storage<T, false>
+    {
+        inline static constexpr thunk t = {
+            nullptr,
+            nullptr,
             [](void* p) noexcept {
                 static_cast<T*>(p)->~T();
             },
@@ -180,6 +192,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         // Exception safe buffer allocation.
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);
 
+        // Other constructor guarantees the two following calls are both valid.
         if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)
             t->copy(buf.get(), p);
         else
@@ -207,7 +220,8 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     (T&& t)
     {
         using U = ::std::decay_t<T>;
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");
+        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");
 
         // Exception safe buffer allocation.
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);
@@ -381,7 +395,8 @@ public:\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__);\
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
+        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
         _ptr = new (buf.get()) U{::std::forward<T>(t)};\
         buf.release();\
