@@ -209,7 +209,6 @@ Tests whether the interface holds anything.
 Two interfaces compare equal iff they are both empty or refer to the same object.
 
 All other special member functions all behave like they should.
-There is no conversion between different interfaces unless one is a subset of another.
 
 ## Non-member functions
 
