@@ -198,7 +198,10 @@ struct S {
   void f(char) {};
 };
 
-I{S{}}.f();  // calls f(int)
+void f()
+{
+  I{S{}}.f();  // calls f(int)
+}
 ````
 
 #### `operator bool() const noexcept`
@@ -219,9 +222,34 @@ Swaps the contents of the interfaces.
 #### `template<typename T> friend T* target(interface& i) noexcept`
 #### `template<typename T> friend const T* target(const interface& i) noexcept`
 Returns a pointer to the underlying object of `i`. Returns `nullptr` if type doesn't match.  
-Call `target<T*>` to retrieve the object from an interface storing a pointer to `T`, its resulting type is `T**`.  
 Returns a `const` qualified pointer if `I` is `const` qualified.  
-Can only be found by ADL, use `using ::target;` to enable if `target` is shadowed.
+Returned pointer is invalidated on assignment and copy to interface, but not on move.
+
+````c++
+using Bazer = INTERFACE(int(), baz);
+struct Q {
+  int i;
+  int baz() { return i; }
+};
+
+void baz()
+{
+  Q q1{1}, q2{2};
+  Bazer b = &q1;
+  
+  assert(!target<Q>(b));  // target is Q*
+  assert(target<Q*>(b));
+  
+  assert(b.baz() == 1);
+  *target<Q*>(b1) = &q2;    // result of target is Q**
+  assert(b.baz() == 2);
+  
+  auto p = target<Q*>(b);
+  Bazer b2 = std::move(b);
+  assert(p == target<Q*>(b2));  // moving doesn't invalidate pointer
+}
+````
+
 
 ## Well-definedness
 
