@@ -33,6 +33,8 @@ Must have at least one method. Use `std::any` instead for empty interfaces.
 
 Pointers to objects give `interface` reference semantics. Otherwise, the stored type must be copy constructible.
 
+`interface` should generally never be cv-qualified. Its use is limited to observing
+
 Requires C++17.
 
 Has a default maximum of 8 methods in the interface. See impl/README for details.
@@ -180,7 +182,7 @@ There exists a conversion from an interface to another subset interface. The res
 
 ## Other member functions
 
-#### `interface(T&& t)`
+#### `template<typename T> interface(T&& t)`
 Constructs an interface from `t` that have methods similar to interface methods. Similarity follows that of `std::function`.
 
 #### `operator bool()`
@@ -194,11 +196,13 @@ There is no conversion between different interfaces unless one is a subset of an
 #### `friend swap(interface& x, interface& y)`
 Swaps the contents of the interfaces.
 
-#### `template<typename T, typename I> /* const */ T* target(I&& i)`
+#### `template<typename T> friend T* target(interface&& i)`
+#### `template<typename T> friend T* target(interface& i)`
+#### `template<typename T> friend const T* target(const interface& i)`
 Returns a pointer to the underlying object of `i`. Returns `nullptr` if type doesn't match.  
 Call `target<T*>` to retrieve the object from an interface storing a pointer to `T`, its resulting type is `T**`.  
 Returns a `const` qualified pointer if `I` is `const` qualified.  
-Only participates in overload resolution if `I` is an interface.  
+Can only be found by ADL, use `using ::target;` to enable if `target` is shadowed.
 
 ## Well-definedness
 
