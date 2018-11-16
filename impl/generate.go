@@ -171,17 +171,8 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         return i._t;
     }
 
-  public:
-    INTERFACE_APPEND_LINE(_interface)() = default;
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }
-
-    // SFINAE on whether argument is an interface.
-    // This is both the copy constructor and the converting constructor from other superset
-    // interfaces.
-    template <typename I,
-              ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>
-    INTERFACE_APPEND_LINE(_interface)
-    (I&& i)
+    template<typename I>
+    void construct(I&& i)
     {
         if(!i)
             return;
@@ -210,6 +201,22 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         _vtable = {
             get_##METHOD_NAME0(i, ::interface_detail::interface_tag{}),
         };
+    }
+
+  public:
+    INTERFACE_APPEND_LINE(_interface)() = default;
+    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }
+    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }
+
+    // SFINAE on whether argument is an interface.
+    // This is both the copy constructor and the converting constructor from other superset
+    // interfaces.
+    template <typename I,
+              ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>
+    INTERFACE_APPEND_LINE(_interface)
+    (I&& i)
+    {
+        construct(::std::forward<I>(i));
     }
 
     // SFINAE on whether argument is an interface.
@@ -244,9 +251,16 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         delete[] reinterpret_cast<::std::byte*>(_ptr);
     }
 
-    interface& operator=(interface other) noexcept
+    interface& operator=(const interface& other)
     {
-        swap(*this, other);
+        auto tmp = other;
+        swap(*this, tmp);
+        return *this;
+    }
+    interface& operator=(interface&& other) noexcept
+    {
+        auto tmp = ::std::move(other);
+        swap(*this, tmp);
         return *this;
     }
 
@@ -366,11 +380,8 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    template<typename I>\
+    void construct(I&& i)\
     {\
         if(!i)\
             return;\
@@ -391,6 +402,18 @@ public:\
             {{- end}}
         };\
     }\
+\
+public:\
+    INTERFACE_APPEND_LINE(_interface)() = default;\
+    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
+    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    {\
+        construct(::std::forward<I>(i));\
+    }\
+\
+\
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
     INTERFACE_APPEND_LINE(_interface)(T&& t)\
     {\
@@ -416,9 +439,16 @@ public:\
         delete[] reinterpret_cast<::std::byte*>(_ptr);\
     }\
 \
-    interface& operator=(interface other) noexcept\
+    interface& operator=(const interface& other)\
     {\
-        swap(*this, other);\
+        auto tmp = other;\
+        swap(*this, tmp);\
+        return *this;\
+    }\
+    interface& operator=(interface&& other) noexcept\
+    {\
+        auto tmp = ::std::move(other);\
+        swap(*this, tmp);\
         return *this;\
     }\
 \
