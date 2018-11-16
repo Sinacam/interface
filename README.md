@@ -33,7 +33,7 @@ Must have at least one method. Use `std::any` instead for empty interfaces.
 
 Pointers to objects give `interface` reference semantics. Otherwise, the stored type must be copy constructible.
 
-`interface` should generally never be cv-qualified. `const interface` is limited to observing the underlying object through `target` and `operator bool`.
+`interface` should generally never be cv-qualified. `const interface` is limited to observing the underlying object through `target`, `operator bool` and equality comparisons.
 
 Requires C++17.
 
@@ -190,7 +190,8 @@ Constructs an interface from another interface `I` that must have a superset of 
 
 #### `signature method_name`
 `signature` and `method_name` are arguments passed in to the interface.  
-Calls the underlying object's method with the same name and sufficiently similar signature selected through overload resolution. The return type does not participate in resolution and must be convertible to the interface return type.
+Calls the underlying object's method with the same name and sufficiently similar signature selected through overload resolution. The return type does not participate in resolution and must be convertible to the interface return type.  
+Behaviour is undefined if the interface is empty.
 ````c++
 using I = INTERFACE(void(int), f);
 struct S {
@@ -200,11 +201,11 @@ struct S {
 
 void f()
 {
-  I{S{}}.f();  // calls f(int)
+  I{S{}}.f(42);  // calls f(int)
 }
 ````
 
-#### `operator bool() const noexcept`
+#### `explicit operator bool() const noexcept`
 Tests whether the interface holds anything.
 
 #### `bool operator==(const interface&) const noexcept`
@@ -222,7 +223,6 @@ Swaps the contents of the interfaces.
 #### `template<typename T> friend T* target(interface& i) noexcept`
 #### `template<typename T> friend const T* target(const interface& i) noexcept`
 Returns a pointer to the underlying object of `i`. Returns `nullptr` if type doesn't match.  
-Returns a `const` qualified pointer if `I` is `const` qualified.  
 Returned pointer is invalidated on assignment and copy to interface, but not on move.
 
 ````c++
