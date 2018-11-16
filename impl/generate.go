@@ -89,7 +89,18 @@ namespace interface_detail
     template<typename T>
     constexpr const thunk* get_thunk()
     {
-        return &thunk_storage<T>::t;
+        // Returns same thunk for all pointer types, used to determine whether
+        // interface has reference semantics.
+        if constexpr (std::is_pointer_v<T>)
+            return &thunk_storage<void*>::t;
+        else
+            return &thunk_storage<T>::t;
+    }
+
+    // All pointer thunks are void* thunks.
+    constexpr bool is_pointer_thunk(const thunk* t)
+    {
+        return t == get_thunk<void*>();
     }
 }
 
@@ -150,7 +161,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
 
   public:
     INTERFACE_APPEND_LINE(_interface)() = default;
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) { swap(*this, other); }
+    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }
 
     // SFINAE on whether argument is an interface.
     // This is both the copy constructor and the converting constructor from other superset
@@ -235,7 +246,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
 
     // Fetches underlying type if thunk* matches, which serves as RTTI.
     template<typename T>
-    friend T* target(interface&& i)
+    friend T* target(interface&& i) noexcept
     {
         if(i._t == ::interface_detail::get_thunk<T>())
             return reinterpret_cast<T*>(i._ptr);
@@ -243,7 +254,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
             return nullptr;
     }
     template<typename T>
-    friend T* target(interface& i)
+    friend T* target(interface& i) noexcept
     {
         if(i._t == ::interface_detail::get_thunk<T>())
             return reinterpret_cast<T*>(i._ptr);
@@ -251,7 +262,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
             return nullptr;
     }
     template<typename T>
-    friend const T* target(const interface& i)
+    friend const T* target(const interface& i) noexcept
     {
         if(i._t == ::interface_detail::get_thunk<T>())
             return reinterpret_cast<T*>(i._ptr);
@@ -259,7 +270,20 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
             return nullptr;
     }
 
-    operator bool() const { return _ptr; }
+    // Returns true if there is an underlying object.
+    explicit operator bool() const noexcept { return _ptr; }
+
+    // Returns true iff both interfaces are empty or both references the same object.
+    bool operator==(const interface& rhs) const noexcept
+    {
+        if(!_ptr)
+            return !rhs._ptr;
+        if(::interface_detail::is_pointer_thunk(_t) && ::interface_detail::is_pointer_thunk(rhs._t))
+            return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);
+        return false;
+    }
+    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }
+
     friend void swap(interface& x, interface& y) noexcept
     {
         using ::std::swap;
@@ -330,7 +354,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
 \
 public:\
     INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>>* = nullptr>\
     INTERFACE_APPEND_LINE(_interface)(I&& i)\
     {\
@@ -392,7 +416,7 @@ public:\
     {{- end}}
 \
     template<typename T>\
-    friend T* target(interface&& i)\
+    friend T* target(interface&& i) noexcept\
     {\
         if(i._t == ::interface_detail::get_thunk<T>())\
             return reinterpret_cast<T*>(i._ptr);\
@@ -400,7 +424,7 @@ public:\
             return nullptr;\
     }\
     template<typename T>\
-    friend T* target(interface& i)\
+    friend T* target(interface& i) noexcept\
     {\
         if(i._t == ::interface_detail::get_thunk<T>())\
             return reinterpret_cast<T*>(i._ptr);\
@@ -408,7 +432,7 @@ public:\
             return nullptr;\
     }\
     template<typename T>\
-    friend const T* target(const interface& i)\
+    friend const T* target(const interface& i) noexcept\
     {\
         if(i._t == ::interface_detail::get_thunk<T>())\
             return reinterpret_cast<T*>(i._ptr);\
@@ -416,7 +440,18 @@ public:\
             return nullptr;\
     }\
 \
-    operator bool() const { return _ptr; }\
+    explicit operator bool() const noexcept { return _ptr; }\
+\
+    bool operator==(const interface& rhs) const noexcept\
+    {\
+        if(!_ptr)\
+            return !rhs._ptr;\
+        if(::interface_detail::is_pointer_thunk(_t) && ::interface_detail::is_pointer_thunk(rhs._t))\
+            return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
+        return false;\
+    }\
+    bool operator!=(const interface& rhs) const noexcept { return !(*this == rhs); }\
+\
     friend void swap(interface& x, interface& y) noexcept\
     {\
         using ::std::swap;\
