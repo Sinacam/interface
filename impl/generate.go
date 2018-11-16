@@ -93,20 +93,9 @@ namespace interface_detail
     }
 }
 
-// Fetches underlying type if thunk* matches, which serves as RTTI.
-template<typename T, typename I, 
-         std::enable_if_t<::interface_detail::is_interface_v<std::decay_t<I>>, bool> = false>
-auto target(I&& i)
-{
-    using R = std::conditional_t<std::is_const_v<std::decay_t<I>>, const T*, T*>;
-    auto t = fetch_thunk(i, ::interface_detail::interface_tag{});
-    auto p = fetch_pointer(i, ::interface_detail::interface_tag{});
-
-    if(t == ::interface_detail::get_thunk<T>())
-        return reinterpret_cast<R>(p);
-    else
-        return R{nullptr};
-}
+// For ADL purposes.
+template<typename T, typename I>
+void target(I&&, ::interface_detail::interface_tag);
 
 // For creating anonymous variables.
 #define INTERFACE_CONCAT_DIRECT(x, y) x##y
@@ -242,6 +231,32 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         // Dispatches to type erased method call.
         return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(
             _ptr, ::std::forward<Args>(args)...);
+    }
+
+    // Fetches underlying type if thunk* matches, which serves as RTTI.
+    template<typename T>
+    friend T* target(interface&& i)
+    {
+        if(i._t == ::interface_detail::get_thunk<T>())
+            return reinterpret_cast<T*>(i._ptr);
+        else
+            return nullptr;
+    }
+    template<typename T>
+    friend T* target(interface& i)
+    {
+        if(i._t == ::interface_detail::get_thunk<T>())
+            return reinterpret_cast<T*>(i._ptr);
+        else
+            return nullptr;
+    }
+    template<typename T>
+    friend const T* target(const interface& i)
+    {
+        if(i._t == ::interface_detail::get_thunk<T>())
+            return reinterpret_cast<T*>(i._ptr);
+        else
+            return nullptr;
     }
 
     operator bool() const { return _ptr; }
