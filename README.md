@@ -33,7 +33,7 @@ Must have at least one method. Use `std::any` instead for empty interfaces.
 
 Pointers to objects give `interface` reference semantics. Otherwise, the stored type must be copy constructible.
 
-`interface` should generally never be cv-qualified. `const interface` is limited to observing the underlying object through `target` and `operator bool`.
+`interface` should generally never be cv-qualified. `const interface` is limited to observing the underlying object through `target`, `operator bool` and equality comparisons.
 
 Requires C++17.
 
@@ -204,7 +204,7 @@ void f()
 }
 ````
 
-#### `operator bool() const noexcept`
+#### `explicit operator bool() const noexcept`
 Tests whether the interface holds anything.
 
 #### `bool operator==(const interface&) const noexcept`
