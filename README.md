@@ -223,7 +223,6 @@ Swaps the contents of the interfaces.
 #### `template<typename T> friend T* target(interface& i) noexcept`
 #### `template<typename T> friend const T* target(const interface& i) noexcept`
 Returns a pointer to the underlying object of `i`. Returns `nullptr` if type doesn't match.  
-Returns a `const` qualified pointer if `I` is `const` qualified.  
 Returned pointer is invalidated on assignment and copy to interface, but not on move.
 
 ````c++
