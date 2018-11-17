@@ -122,11 +122,11 @@ void target(I&&, ::interface_detail::interface_tag);
 // The multitudes of versions each have a different arity.
 
 // Inherits from interface_tag for type traits is_interface.
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag
 {
     // Alias for both readability and for recursively defined functions:
     // user may provide a function signature including interface.
-    using interface = INTERFACE_APPEND_LINE(_interface);
+    using interface = INTERFACE_APPEND_LINE(interface__);
 
     // Used in dispatching function call.
     // Used in converting from one interface to another to bypass access level.
@@ -195,16 +195,16 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     }
 
   public:
-    INTERFACE_APPEND_LINE(_interface)() = default;
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }
+    INTERFACE_APPEND_LINE(interface__)() = default;
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }
 
     // SFINAE on whether argument is an interface.
     // This is both the copy constructor and the converting constructor from other superset
     // interfaces.
     template <typename I,
               ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>
-    INTERFACE_APPEND_LINE(_interface)
+    INTERFACE_APPEND_LINE(interface__)
     (I&& i)
     {
         construct(::std::forward<I>(i));
@@ -214,7 +214,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
     // This is the conversion from any type to an interface.
     template <typename T,
               ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>
-    INTERFACE_APPEND_LINE(_interface)
+    INTERFACE_APPEND_LINE(interface__)
     (T&& t)
     {
         using U = ::std::decay_t<T>;
@@ -235,7 +235,7 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
         };
     }
 
-    ~INTERFACE_APPEND_LINE(_interface)()
+    ~INTERFACE_APPEND_LINE(interface__)()
     {
         if(_ptr)
             _t->destroy(_ptr);
@@ -329,9 +329,9 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag
 
 
 #define INTERFACE_1(SIGNATURE0, METHOD_NAME0)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -381,18 +381,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -407,7 +407,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
@@ -491,9 +491,9 @@ private:\
 }
 
 #define INTERFACE_2(SIGNATURE0, METHOD_NAME0, SIGNATURE1, METHOD_NAME1)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -559,18 +559,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -586,7 +586,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
@@ -675,9 +675,9 @@ private:\
 }
 
 #define INTERFACE_3(SIGNATURE0, METHOD_NAME0, SIGNATURE1, METHOD_NAME1, SIGNATURE2, METHOD_NAME2)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -759,18 +759,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -787,7 +787,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
@@ -881,9 +881,9 @@ private:\
 }
 
 #define INTERFACE_4(SIGNATURE0, METHOD_NAME0, SIGNATURE1, METHOD_NAME1, SIGNATURE2, METHOD_NAME2, SIGNATURE3, METHOD_NAME3)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -981,18 +981,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -1010,7 +1010,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
@@ -1109,9 +1109,9 @@ private:\
 }
 
 #define INTERFACE_5(SIGNATURE0, METHOD_NAME0, SIGNATURE1, METHOD_NAME1, SIGNATURE2, METHOD_NAME2, SIGNATURE3, METHOD_NAME3, SIGNATURE4, METHOD_NAME4)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -1225,18 +1225,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -1255,7 +1255,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
@@ -1359,9 +1359,9 @@ private:\
 }
 
 #define INTERFACE_6(SIGNATURE0, METHOD_NAME0, SIGNATURE1, METHOD_NAME1, SIGNATURE2, METHOD_NAME2, SIGNATURE3, METHOD_NAME3, SIGNATURE4, METHOD_NAME4, SIGNATURE5, METHOD_NAME5)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -1491,18 +1491,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -1522,7 +1522,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
@@ -1631,9 +1631,9 @@ private:\
 }
 
 #define INTERFACE_7(SIGNATURE0, METHOD_NAME0, SIGNATURE1, METHOD_NAME1, SIGNATURE2, METHOD_NAME2, SIGNATURE3, METHOD_NAME3, SIGNATURE4, METHOD_NAME4, SIGNATURE5, METHOD_NAME5, SIGNATURE6, METHOD_NAME6)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -1779,18 +1779,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -1811,7 +1811,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
@@ -1925,9 +1925,9 @@ private:\
 }
 
 #define INTERFACE_8(SIGNATURE0, METHOD_NAME0, SIGNATURE1, METHOD_NAME1, SIGNATURE2, METHOD_NAME2, SIGNATURE3, METHOD_NAME3, SIGNATURE4, METHOD_NAME4, SIGNATURE5, METHOD_NAME5, SIGNATURE6, METHOD_NAME6, SIGNATURE7, METHOD_NAME7)\
-class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
+class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
 {\
-    using interface = INTERFACE_APPEND_LINE(_interface);\
+    using interface = INTERFACE_APPEND_LINE(interface__);\
 \
     friend auto get_##METHOD_NAME0(const interface& i, ::interface_detail::interface_tag)\
     {\
@@ -2089,18 +2089,18 @@ class INTERFACE_APPEND_LINE(_interface) : ::interface_detail::interface_tag\
     }\
 \
 public:\
-    INTERFACE_APPEND_LINE(_interface)() = default;\
-    INTERFACE_APPEND_LINE(_interface)(interface&& other) noexcept { swap(*this, other); }\
-    INTERFACE_APPEND_LINE(_interface)(const interface& other) { construct(other); }\
+    INTERFACE_APPEND_LINE(interface__)() = default;\
+    INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
+    INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
     template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(I&& i)\
+    INTERFACE_APPEND_LINE(interface__)(I&& i)\
     {\
         construct(::std::forward<I>(i));\
     }\
 \
 \
     template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(_interface)(T&& t)\
+    INTERFACE_APPEND_LINE(interface__)(T&& t)\
     {\
         using U = ::std::decay_t<T>;\
         static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
@@ -2122,7 +2122,7 @@ public:\
         };\
     }\
 \
-    ~INTERFACE_APPEND_LINE(_interface)()\
+    ~INTERFACE_APPEND_LINE(interface__)()\
     {\
         if(_ptr)\
             _t->destroy(_ptr);\
