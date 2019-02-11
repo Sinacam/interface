@@ -190,8 +190,7 @@ Constructs an interface from another interface `I` that must have a superset of 
 
 #### `signature method_name`
 `signature` and `method_name` are arguments passed in to the interface.  
-Calls the underlying object's method with the same name and sufficiently similar signature selected through overload resolution. The return type does not participate in resolution and must be convertible to the interface return type.  
-Behaviour is undefined if the interface is empty.
+Calls the underlying object's method with the same name and sufficiently similar signature selected through overload resolution. The return type does not participate in resolution and must be convertible to the interface return type.
 ````c++
 using I = INTERFACE(void(int), f);
 struct S {
