@@ -190,6 +190,34 @@ Fooer f = fb;
 
 There exists a conversion from an interface to another subset interface. The resulting `f` is the same as constructing from `S{}` directly.
 
+## Example 8
+
+````c++
+using Fooer = INTERFACE(void(), foo);
+struct S {
+    void foo() const volatile & {}
+};
+
+Fooer f = S{};
+````
+
+Can call cvr-qualified functions.
+
+````c++
+struct Fail
+{
+    void foo() && {}
+};
+````
+
+Only calls with a non-qualified lvalue. Note overload resolution prefers unqualified versions.
+
+````c++
+INTERFACE(void() const, fails)
+````
+
+Interface methods cannot be cvr-qualified.
+
 ## Member functions
 
 #### `template<typename T> interface(T&& t)`
