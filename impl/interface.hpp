@@ -1,3 +1,7 @@
+// DO NOT modify, this is a machine generated file.
+// DO NOT include directly, this is a implementation file.
+// See impl/README for details.
+
 #include<memory>
 #include<type_traits>
 #include<cstddef>
@@ -200,8 +204,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }
 
     // SFINAE on whether argument is an interface.
-    // This is both the copy constructor and the converting constructor from other superset
-    // interfaces.
+    // This is the converting constructor from other superset interfaces.
     template <typename I,
               ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>
     INTERFACE_APPEND_LINE(interface__)
@@ -218,7 +221,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag
     (T&& t)
     {
         using U = ::std::decay_t<T>;
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");
+        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");
         static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");
 
         // Exception safe buffer allocation.
@@ -229,7 +232,6 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag
 
         // Constructs _vtable by name at compile time.
         // erasure_fn is a unified interface to the method.
-        // This can be done with polymorphic classes instead, but the previous constructor can't.
         _vtable = {
             ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,
         };
@@ -316,7 +318,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag
   private:
     template <typename T>
     using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;
-    using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*>;
+    using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE>*>;
 
     void* _ptr = nullptr;
     const ::interface_detail::thunk* _t = nullptr;
@@ -339,13 +341,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -359,8 +361,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -368,7 +370,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -384,26 +386,26 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
         };\
     }\
 \
@@ -427,41 +429,41 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -469,8 +471,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -481,8 +483,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*>;\
 \
     void* _ptr = nullptr;\
@@ -501,13 +503,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
@@ -516,13 +518,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<1>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME1##_1_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME1(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME1(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -536,8 +538,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -545,7 +547,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -562,27 +564,27 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U__>>::value,\
         };\
     }\
 \
@@ -606,46 +608,46 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME1(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME1(Args__&&... as)\
     {\
-        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -653,8 +655,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -665,8 +667,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*, erasure_fn_t<SIGNATURE1>*>;\
 \
     void* _ptr = nullptr;\
@@ -685,13 +687,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
@@ -700,13 +702,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<1>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME1##_1_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME1(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME1(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
@@ -715,13 +717,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<2>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME2##_2_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME2(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME2(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -735,8 +737,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -744,7 +746,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -762,28 +764,28 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U__>>::value,\
         };\
     }\
 \
@@ -807,51 +809,51 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME1(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME1(Args__&&... as)\
     {\
-        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME2(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME2(Args__&&... as)\
     {\
-        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -859,8 +861,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -871,8 +873,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*, erasure_fn_t<SIGNATURE1>*, erasure_fn_t<SIGNATURE2>*>;\
 \
     void* _ptr = nullptr;\
@@ -891,13 +893,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
@@ -906,13 +908,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<1>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME1##_1_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME1(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME1(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
@@ -921,13 +923,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<2>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME2##_2_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME2(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME2(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
@@ -936,13 +938,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<3>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME3##_3_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME3(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME3(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -956,8 +958,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -965,7 +967,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -984,29 +986,29 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U__>>::value,\
         };\
     }\
 \
@@ -1030,56 +1032,56 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME1(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME1(Args__&&... as)\
     {\
-        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME2(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME2(Args__&&... as)\
     {\
-        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME3(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME3(Args__&&... as)\
     {\
-        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1087,8 +1089,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1099,8 +1101,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*, erasure_fn_t<SIGNATURE1>*, erasure_fn_t<SIGNATURE2>*, erasure_fn_t<SIGNATURE3>*>;\
 \
     void* _ptr = nullptr;\
@@ -1119,13 +1121,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
@@ -1134,13 +1136,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<1>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME1##_1_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME1(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME1(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
@@ -1149,13 +1151,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<2>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME2##_2_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME2(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME2(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
@@ -1164,13 +1166,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<3>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME3##_3_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME3(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME3(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
@@ -1179,13 +1181,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<4>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME4##_4_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME4(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME4(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -1199,8 +1201,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -1208,7 +1210,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -1228,30 +1230,30 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U__>>::value,\
         };\
     }\
 \
@@ -1275,61 +1277,61 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME1(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME1(Args__&&... as)\
     {\
-        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME2(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME2(Args__&&... as)\
     {\
-        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME3(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME3(Args__&&... as)\
     {\
-        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME4(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME4(Args__&&... as)\
     {\
-        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1337,8 +1339,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1349,8 +1351,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*, erasure_fn_t<SIGNATURE1>*, erasure_fn_t<SIGNATURE2>*, erasure_fn_t<SIGNATURE3>*, erasure_fn_t<SIGNATURE4>*>;\
 \
     void* _ptr = nullptr;\
@@ -1369,13 +1371,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
@@ -1384,13 +1386,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<1>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME1##_1_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME1(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME1(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
@@ -1399,13 +1401,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<2>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME2##_2_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME2(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME2(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
@@ -1414,13 +1416,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<3>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME3##_3_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME3(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME3(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
@@ -1429,13 +1431,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<4>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME4##_4_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME4(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME4(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME5(const interface& i, ::interface_detail::interface_tag)\
@@ -1444,13 +1446,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<5>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME5##_5_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME5(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME5(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -1464,8 +1466,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -1473,7 +1475,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -1494,31 +1496,31 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE5, METHOD_NAME5##_5_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE5, METHOD_NAME5##_5_factory<U__>>::value,\
         };\
     }\
 \
@@ -1542,66 +1544,66 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME1(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME1(Args__&&... as)\
     {\
-        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME2(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME2(Args__&&... as)\
     {\
-        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME3(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME3(Args__&&... as)\
     {\
-        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME4(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME4(Args__&&... as)\
     {\
-        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME5(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME5(Args__&&... as)\
     {\
-        return get_##METHOD_NAME5(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME5(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1609,8 +1611,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1621,8 +1623,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*, erasure_fn_t<SIGNATURE1>*, erasure_fn_t<SIGNATURE2>*, erasure_fn_t<SIGNATURE3>*, erasure_fn_t<SIGNATURE4>*, erasure_fn_t<SIGNATURE5>*>;\
 \
     void* _ptr = nullptr;\
@@ -1641,13 +1643,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
@@ -1656,13 +1658,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<1>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME1##_1_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME1(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME1(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
@@ -1671,13 +1673,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<2>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME2##_2_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME2(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME2(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
@@ -1686,13 +1688,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<3>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME3##_3_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME3(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME3(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
@@ -1701,13 +1703,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<4>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME4##_4_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME4(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME4(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME5(const interface& i, ::interface_detail::interface_tag)\
@@ -1716,13 +1718,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<5>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME5##_5_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME5(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME5(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME6(const interface& i, ::interface_detail::interface_tag)\
@@ -1731,13 +1733,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<6>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME6##_6_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME6(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME6(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -1751,8 +1753,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -1760,7 +1762,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -1782,32 +1784,32 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE5, METHOD_NAME5##_5_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE6, METHOD_NAME6##_6_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE5, METHOD_NAME5##_5_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE6, METHOD_NAME6##_6_factory<U__>>::value,\
         };\
     }\
 \
@@ -1831,71 +1833,71 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME1(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME1(Args__&&... as)\
     {\
-        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME2(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME2(Args__&&... as)\
     {\
-        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME3(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME3(Args__&&... as)\
     {\
-        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME4(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME4(Args__&&... as)\
     {\
-        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME5(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME5(Args__&&... as)\
     {\
-        return get_##METHOD_NAME5(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME5(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME6(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME6(Args__&&... as)\
     {\
-        return get_##METHOD_NAME6(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME6(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -1903,8 +1905,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -1915,8 +1917,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*, erasure_fn_t<SIGNATURE1>*, erasure_fn_t<SIGNATURE2>*, erasure_fn_t<SIGNATURE3>*, erasure_fn_t<SIGNATURE4>*, erasure_fn_t<SIGNATURE5>*, erasure_fn_t<SIGNATURE6>*>;\
 \
     void* _ptr = nullptr;\
@@ -1935,13 +1937,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<0>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME0##_0_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME0(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME0(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME1(const interface& i, ::interface_detail::interface_tag)\
@@ -1950,13 +1952,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<1>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME1##_1_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME1(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME1(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME2(const interface& i, ::interface_detail::interface_tag)\
@@ -1965,13 +1967,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<2>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME2##_2_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME2(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME2(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME3(const interface& i, ::interface_detail::interface_tag)\
@@ -1980,13 +1982,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<3>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME3##_3_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME3(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME3(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME4(const interface& i, ::interface_detail::interface_tag)\
@@ -1995,13 +1997,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<4>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME4##_4_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME4(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME4(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME5(const interface& i, ::interface_detail::interface_tag)\
@@ -2010,13 +2012,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<5>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME5##_5_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME5(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME5(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME6(const interface& i, ::interface_detail::interface_tag)\
@@ -2025,13 +2027,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<6>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME6##_6_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME6(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME6(::std::forward<Args__>(as)...);\
         }\
     };\
     friend auto get_##METHOD_NAME7(const interface& i, ::interface_detail::interface_tag)\
@@ -2040,13 +2042,13 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return get<7>(i._vtable);\
     }\
 \
-    template<typename T>\
+    template<typename T__>\
     struct METHOD_NAME7##_7_factory\
     {\
-        template<typename... Args>\
-        static decltype(auto) call(void* p, Args&&... args)\
+        template<typename... Args__>\
+        static decltype(auto) call(void* p, Args__&&... as)\
         {\
-            return ::interface_detail::as_object<T>(p).METHOD_NAME7(::std::forward<Args>(args)...);\
+            return ::interface_detail::as_object<T__>(p).METHOD_NAME7(::std::forward<Args__>(as)...);\
         }\
     };\
 \
@@ -2060,8 +2062,8 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         return i._t;\
     }\
 \
-    template<typename I>\
-    void construct(I&& i)\
+    template<typename I__>\
+    void construct(I__&& i)\
     {\
         if(!i)\
             return;\
@@ -2069,7 +2071,7 @@ class INTERFACE_APPEND_LINE(interface__) : ::interface_detail::interface_tag\
         auto p = fetch_ptr(i, ::interface_detail::interface_tag{});\
         auto t = fetch_thunk(i, ::interface_detail::interface_tag{});\
         auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[t->size]);\
-        if constexpr(::std::is_lvalue_reference_v<I> || ::std::is_const_v<I>)\
+        if constexpr(::std::is_lvalue_reference_v<I__> || ::std::is_const_v<I__>)\
             t->copy(buf.get(), p);\
         else\
             t->move(buf.get(), p);\
@@ -2092,33 +2094,33 @@ public:\
     INTERFACE_APPEND_LINE(interface__)() = default;\
     INTERFACE_APPEND_LINE(interface__)(interface&& other) noexcept { swap(*this, other); }\
     INTERFACE_APPEND_LINE(interface__)(const interface& other) { construct(other); }\
-    template<typename I, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(I&& i)\
+    template<typename I__, ::std::enable_if_t<::interface_detail::is_interface_v<::std::decay_t<I__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(I__&& i)\
     {\
-        construct(::std::forward<I>(i));\
+        construct(::std::forward<I__>(i));\
     }\
 \
 \
-    template <typename T, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T>>, bool> = false>\
-    INTERFACE_APPEND_LINE(interface__)(T&& t)\
+    template <typename T__, ::std::enable_if_t<!::interface_detail::is_interface_v<::std::decay_t<T__>>, bool> = false>\
+    INTERFACE_APPEND_LINE(interface__)(T__&& t)\
     {\
-        using U = ::std::decay_t<T>;\
-        static_assert(alignof(U) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type yet.");\
-        static_assert(::std::is_constructible_v<U, const U&>, "Value semantics require the type be copy constructible.");\
-        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U)]);\
-        _ptr = new (buf.get()) U{::std::forward<T>(t)};\
+        using U__ = ::std::decay_t<T__>;\
+        static_assert(alignof(U__) <= __STDCPP_DEFAULT_NEW_ALIGNMENT__, "Doesn't support overaligned type.");\
+        static_assert(::std::is_constructible_v<U__, const U__&>, "Value semantics require the type be copy constructible.");\
+        auto buf = ::std::unique_ptr<::std::byte[]>(new ::std::byte[sizeof(U__)]);\
+        _ptr = new (buf.get()) U__{::std::forward<T__>(t)};\
         buf.release();\
-        _t = ::interface_detail::get_thunk<U>();\
+        _t = ::interface_detail::get_thunk<U__>();\
 \
         _vtable = {\
-            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE5, METHOD_NAME5##_5_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE6, METHOD_NAME6##_6_factory<U>>::value,\
-            ::interface_detail::erasure_fn<SIGNATURE7, METHOD_NAME7##_7_factory<U>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE0, METHOD_NAME0##_0_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE1, METHOD_NAME1##_1_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE2, METHOD_NAME2##_2_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE3, METHOD_NAME3##_3_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE4, METHOD_NAME4##_4_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE5, METHOD_NAME5##_5_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE6, METHOD_NAME6##_6_factory<U__>>::value,\
+            ::interface_detail::erasure_fn<SIGNATURE7, METHOD_NAME7##_7_factory<U__>>::value,\
         };\
     }\
 \
@@ -2142,76 +2144,76 @@ public:\
         return *this;\
     }\
 \
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME0(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME0(Args__&&... as)\
     {\
-        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME0(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME1(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME1(Args__&&... as)\
     {\
-        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME1(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME2(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME2(Args__&&... as)\
     {\
-        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME2(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME3(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME3(Args__&&... as)\
     {\
-        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME3(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME4(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME4(Args__&&... as)\
     {\
-        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME4(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME5(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME5(Args__&&... as)\
     {\
-        return get_##METHOD_NAME5(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME5(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME6(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME6(Args__&&... as)\
     {\
-        return get_##METHOD_NAME6(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME6(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
-    template<typename... Args>\
-    decltype(auto) METHOD_NAME7(Args&&... args)\
+    template<typename... Args__>\
+    decltype(auto) METHOD_NAME7(Args__&&... as)\
     {\
-        return get_##METHOD_NAME7(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args>(args)...);\
+        return get_##METHOD_NAME7(*this, ::interface_detail::interface_tag{})(_ptr, ::std::forward<Args__>(as)...);\
     }\
 \
-    template<typename T>\
-    friend T* target(interface&& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface&& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend T* target(interface& i) noexcept\
+    template<typename T__>\
+    friend T__* target(interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
-    template<typename T>\
-    friend const T* target(const interface& i) noexcept\
+    template<typename T__>\
+    friend const T__* target(const interface& i) noexcept\
     {\
-        if(i._t == ::interface_detail::get_thunk<T>())\
-            return reinterpret_cast<T*>(i._ptr);\
+        if(i._t == ::interface_detail::get_thunk<T__>())\
+            return reinterpret_cast<T__*>(i._ptr);\
         else\
             return nullptr;\
     }\
 \
     explicit operator bool() const noexcept { return _ptr; }\
 \
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator==(I&& rhs) const noexcept\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator==(I__&& rhs) const noexcept\
     {\
         if(!_ptr)\
             return !rhs._ptr;\
@@ -2219,8 +2221,8 @@ public:\
             return *reinterpret_cast<void**>(_ptr) == *reinterpret_cast<void**>(rhs._ptr);\
         return false;\
     }\
-    template<typename I, std::enable_if_t<std::is_same_v<interface, std::decay_t<I>>, bool> = false>\
-    bool operator!=(I&& rhs) const noexcept { return !(*this == rhs); }\
+    template<typename I__, std::enable_if_t<std::is_same_v<interface, std::decay_t<I__>>, bool> = false>\
+    bool operator!=(I__&& rhs) const noexcept { return !(*this == rhs); }\
 \
     friend void swap(interface& x, interface& y) noexcept\
     {\
@@ -2231,8 +2233,8 @@ public:\
     }\
 \
 private:\
-    template<typename T>\
-    using erasure_fn_t = typename ::interface_detail::erasure_fn<T>::type;\
+    template<typename T__>\
+    using erasure_fn_t = typename ::interface_detail::erasure_fn<T__>::type;\
     using vtable_t = ::std::tuple<erasure_fn_t<SIGNATURE0>*, erasure_fn_t<SIGNATURE1>*, erasure_fn_t<SIGNATURE2>*, erasure_fn_t<SIGNATURE3>*, erasure_fn_t<SIGNATURE4>*, erasure_fn_t<SIGNATURE5>*, erasure_fn_t<SIGNATURE6>*, erasure_fn_t<SIGNATURE7>*>;\
 \
     void* _ptr = nullptr;\
