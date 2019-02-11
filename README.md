@@ -135,12 +135,22 @@ An alias isn't needed here because it's within parentheses.
 ## Example 5
 
 ````c++
-INTERFACE(interface(interface, interface), works);
-INTERFACE(void(std::vector<interface>), still_works);
-INTERFACE(interface&&(*(std::vector<interface>&, interface*(*)[10]))(), this_is_fine);
+using Cloner = INTERFACE(interface(), clone);
+struct C
+{
+    Cloner clone() { return *this; }
+};
 ````
 
 `interface` refers to the type itself within its definition, similar to `this`.
+
+````c++
+INTERFACE(interface(interface, interface), works);
+INTERFACE(void(std::vector<interface>), still_works);
+INTERFACE(interface&&(*(std::array<interface, 42>&, interface*(*)[42]))(), this_is_fine);
+````
+
+Can be used in arbitrarily compounded types.
 
 ````c++
 using bad_signature = void(std::map<string, interface>);
