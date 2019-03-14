@@ -140,6 +140,9 @@ struct C
 {
     Cloner clone() { return *this; }
 };
+
+Cloner c1 = C{};
+auto c2 = c1.clone();
 ````
 
 `interface` refers to the type itself within its definition, similar to `this`.
@@ -213,7 +216,7 @@ struct Fail
 Only calls with a non-qualified lvalue. Note overload resolution prefers unqualified versions.
 
 ````c++
-INTERFACE(void() const, fails)
+INTERFACE(void() const, fails);
 ````
 
 Interface methods cannot be cvr-qualified.
@@ -247,7 +250,7 @@ Tests whether the interface holds anything.
 
 #### `bool operator==(const interface&) const noexcept`
 #### `bool operator!=(const interface&) const noexcept`
-Two interfaces compare equal iff they are both empty or refer to the same object. Only participates in overload resolution if argument is cv-ref qualified `interface`.
+Two interfaces compare equal iff they are both empty or refer to the same object.
 
 All other special member functions all behave like they should.
 
