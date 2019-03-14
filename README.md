@@ -250,7 +250,7 @@ Tests whether the interface holds anything.
 
 #### `bool operator==(const interface&) const noexcept`
 #### `bool operator!=(const interface&) const noexcept`
-Two interfaces compare equal iff they are both empty or refer to the same object.
+Two interfaces compare equal iff they are both empty or refer to the same object. Only participates in overload resolution if the argument has the same interface type.
 
 All other special member functions all behave like they should.
 
