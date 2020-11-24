@@ -32,6 +32,7 @@ namespace interface::detail
     template <typename T>
     using disable_if_interface_t = std::enable_if_t<!is_interface_v<std::decay_t<T>>, int>;
 
+    // as_erased adds an additional void* as the first argument of function types.
     template <typename>
     struct as_erased;
 
@@ -44,6 +45,7 @@ namespace interface::detail
     template <typename T>
     using as_erased_t = typename as_erased<T>::type;
 
+    // thunk_t stores the copy constructor, destructor and size of a type in a type erased manner.
     struct thunk_t
     {
         void (*copy)(void* dst, const void* src);
@@ -51,11 +53,20 @@ namespace interface::detail
         std::size_t size;
     };
 
+    // thunk is a thunk_t with the fields filled in.
+    // &thunk is unique for each type, which is used as runtime type identity.
+    // clang-format off
     template <typename T>
-    inline constexpr auto thunk =
-        thunk_t{[](void* dst, const void* src) { new(dst) T{*static_cast<const T*>(src)}; },
-                [](void* p) noexcept { static_cast<T*>(p)->~T(); }, sizeof(T)};
+    inline constexpr auto thunk = thunk_t{
+        [](void* dst, const void* src) { new(dst) T{*static_cast<const T*>(src)}; },
+        [](void* p) noexcept { static_cast<T*>(p)->~T(); },
+        sizeof(T)
+    };
+    // clang-format on
 
+    // intptr_pair is a pointer-like type which steals the bottom bits as a small integer.
+    // intptr_pair makes no assumption of the platform except that alignment of function
+    // pointers is non-zero.
     template <typename T>
     struct intptr_pair
     {
@@ -89,6 +100,10 @@ namespace interface::detail
         std::uintptr_t value = 0;
     };
 
+    // as_refs returns an interface as a tuple of references to the members.
+    // The correct way to use structured bindings is
+    //      auto [objptr, thunk, vtable] = as_refs(i);
+    // They are references, not copied values.
     template <typename I>
     auto as_refs(I&& i)
     {
@@ -115,14 +130,24 @@ namespace interface::detail
     };
 } // namespace interface::detail
 
+// interface__ is "template" for the type created by INTERFACE.
+// interface__ will be replaced by an unique name.
+// Every appearance of SIGNATURE and METHOD_NAME will be replaced by multiple copies
+// of the same surrounding code, where each copy corresponds to the passed in
+// signatures and method names.
+// To avoid naming conflicts, there are only special member functions, member operators
+// and type aliases. All other functionality is provided through friend functions with
+// detail::tag as the last parameter to make them "private".
 class interface__ : ::interface::detail::base
 {
+    // This alias enables the keyword-like capability for self reference.
     using interface = interface__;
-    using byte = ::std::byte;
 
     template <typename I>
     friend auto ::interface::detail::as_refs(I&&);
 
+    // erased_METHOD_NAME::make deduces the signature and returns the type erased version
+    // of the method.
     struct erased_METHOD_NAME
     {
         template <typename T, typename R, typename... Args>
@@ -138,16 +163,18 @@ class interface__ : ::interface::detail::base
   public:
     interface__() = default;
     interface__(interface&& other) noexcept { swap(*this, other); }
-    interface__(const interface& other) { construct(other); }
+    interface__(const interface& other) { construct(*this, other, ::interface::detail::tag{}); }
 
+    // converting constructor for all (non-strict) subset interfaces.
     template <typename I, ::interface::detail::enable_if_interface_t<I> = 0>
-    interface__(I&& other)
+    interface__(I&& other) noexcept(!::std::is_lvalue_reference_v<I> && !::std::is_const_v<I>)
     {
-        construct(::std::forward<I>(other));
+        construct(*this, ::std::forward<I>(other), ::interface::detail::tag{});
     }
 
+    // converting constructor for any type satisfying the interface.
     template <typename T, ::interface::detail::disable_if_interface_t<T> = 0>
-    interface__(T&& x)
+    interface__(T&& x) noexcept(::std::is_pointer_v<::std::decay_t<T>>)
     {
         using dT = ::std::decay_t<T>;
         if constexpr(::std::is_pointer_v<dT>)
@@ -159,12 +186,13 @@ class interface__ : ::interface::detail::base
             ::interface::detail::raii_storage buf{sizeof(dT)};
             _objptr = new(buf.ptr) dT{std::forward<T>(x)};
             owns_object(*this, true, ::interface::detail::tag{});
-            buf.ptr = nullptr;
+            buf.release();
         }
 
         using rdT = ::std::remove_pointer_t<dT>;
         _thunk = &::interface::detail::thunk<rdT>;
 
+        // Alias elaborated class name to avoid naming conflict.
         using method = struct erased_METHOD_NAME;
         _vtable = {
             method::make<rdT>(::std::add_pointer_t<SIGNATURE>(nullptr)),
@@ -235,13 +263,15 @@ class interface__ : ::interface::detail::base
     vtable_t _vtable = {};
 
     template <typename I>
-    void construct(I&& other)
+    friend void construct(interface& self, I&& other,
+                          ::interface::detail::tag) noexcept(!::std::is_lvalue_reference_v<I> &&
+                                                             !::std::is_const_v<I>)
     {
         auto [objptr, thunk, vtable] = ::interface::detail::as_refs(::std::forward<I>(other));
         if(!objptr)
             return;
 
-        _vtable = {
+        self._vtable = {
             get_METHOD_NAME(other, ::interface::detail::tag{}),
         };
 
@@ -251,36 +281,36 @@ class interface__ : ::interface::detail::base
             {
                 ::interface::detail::raii_storage buf{thunk->size};
                 thunk->copy(buf.ptr, objptr);
-                _objptr = buf.ptr;
-                owns_object(*this, true, ::interface::detail::tag{});
-                buf.ptr = nullptr;
+                self._objptr = buf.ptr;
+                owns_object(self, true, ::interface::detail::tag{});
+                buf.release();
             }
             else
             {
-                _objptr = objptr;
+                self._objptr = objptr;
             }
-            _thunk = thunk;
+            self._thunk = thunk;
         }
         else
         {
             using ::std::swap;
-            swap(_objptr, objptr);
-            swap(_thunk, thunk);
+            swap(self._objptr, objptr);
+            swap(self._thunk, thunk);
             vtable = {};
         }
     }
 
-    [[nodiscard]] friend bool owns_object(const interface& i, ::interface::detail::tag)
+    [[nodiscard]] friend bool owns_object(const interface& i, ::interface::detail::tag) noexcept
     {
         return i._thunk.int_value();
     }
 
-    friend void owns_object(interface& i, bool val, ::interface::detail::tag)
+    friend void owns_object(interface& i, bool val, ::interface::detail::tag) noexcept
     {
         i._thunk.int_value(val);
     }
 
-    friend auto get_METHOD_NAME(const interface& i, ::interface::detail::tag)
+    friend auto get_METHOD_NAME(const interface& i, ::interface::detail::tag) noexcept
     {
         return ::std::get<0>(i._vtable);
     }
