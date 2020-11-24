@@ -205,7 +205,7 @@ class interface__ : ::interface::detail::base
     friend T* target(interface& i) noexcept
     {
         if(i._thunk == &::interface::detail::thunk<T>)
-            return static_cast<T*>(_objptr);
+            return static_cast<T*>(i._objptr);
         else
             return nullptr;
     }
@@ -214,7 +214,7 @@ class interface__ : ::interface::detail::base
     friend const T* target(const interface& i) noexcept
     {
         if(i._thunk == &::interface::detail::thunk<T>)
-            return static_cast<const T*>(_objptr);
+            return static_cast<const T*>(i._objptr);
         else
             return nullptr;
     }
