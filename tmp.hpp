@@ -29,8 +29,12 @@ namespace interface::detail
 {
     template <typename T>
     using enable_if_interface_t = std::enable_if_t<is_interface_v<std::decay_t<T>>, int>;
+
     template <typename T>
     using disable_if_interface_t = std::enable_if_t<!is_interface_v<std::decay_t<T>>, int>;
+
+    template<typename T>
+    using enable_if_copyable_t = std::enable_if_t<std::is_copy_constructible_v<std::decay_t<T>>, int>;
 
     // as_erased adds an additional void* as the first argument of function types.
     template <typename>
@@ -58,7 +62,12 @@ namespace interface::detail
     // clang-format off
     template <typename T>
     inline constexpr auto thunk = thunk_t{
-        [](void* dst, const void* src) { new(dst) T{*static_cast<const T*>(src)}; },
+        [](void* dst, const void* src) {
+            // Don't let non-copy-constructible types be a hard error.
+            // This enables referencing those types, disallow those types elsewhere.
+            if constexpr(std::is_copy_constructible_v<T>)
+                new(dst) T{*static_cast<const T*>(src)};
+        },
         [](void* p) noexcept { static_cast<T*>(p)->~T(); },
         sizeof(T)
     };
@@ -165,15 +174,17 @@ class interface__ : ::interface::detail::base
     interface__(interface&& other) noexcept { swap(*this, other); }
     interface__(const interface& other) { construct(*this, other, ::interface::detail::tag{}); }
 
-    // converting constructor for all (non-strict) subset interfaces.
+    // Converting constructor for all (non-strict) subset interfaces.
     template <typename I, ::interface::detail::enable_if_interface_t<I> = 0>
     interface__(I&& other) noexcept(!::std::is_lvalue_reference_v<I> && !::std::is_const_v<I>)
     {
         construct(*this, ::std::forward<I>(other), ::interface::detail::tag{});
     }
 
-    // converting constructor for any type satisfying the interface.
-    template <typename T, ::interface::detail::disable_if_interface_t<T> = 0>
+    // Converting constructor for any type satisfying the interface.
+    // Non-pointers must by copy constructible.
+    template <typename T, ::interface::detail::disable_if_interface_t<T> = 0,
+            ::interface::detail::enable_if_copyable_t<T> = 0>
     interface__(T&& x) noexcept(::std::is_pointer_v<::std::decay_t<T>>)
     {
         using dT = ::std::decay_t<T>;
@@ -183,10 +194,12 @@ class interface__ : ::interface::detail::base
         }
         else
         {
+            // raii_storage is used here to have consistent deallocation with
+            // allocation in construct.
             ::interface::detail::raii_storage buf{sizeof(dT)};
             _objptr = new(buf.ptr) dT{std::forward<T>(x)};
-            owns_object(*this, true, ::interface::detail::tag{});
             buf.release();
+            owns_object(*this, true, ::interface::detail::tag{});
         }
 
         using rdT = ::std::remove_pointer_t<dT>;
@@ -267,6 +280,7 @@ class interface__ : ::interface::detail::base
                           ::interface::detail::tag) noexcept(!::std::is_lvalue_reference_v<I> &&
                                                              !::std::is_const_v<I>)
     {
+        // These are references, see as_refs.
         auto [objptr, thunk, vtable] = ::interface::detail::as_refs(::std::forward<I>(other));
         if(!objptr)
             return;
@@ -282,8 +296,8 @@ class interface__ : ::interface::detail::base
                 ::interface::detail::raii_storage buf{thunk->size};
                 thunk->copy(buf.ptr, objptr);
                 self._objptr = buf.ptr;
-                owns_object(self, true, ::interface::detail::tag{});
                 buf.release();
+                owns_object(self, true, ::interface::detail::tag{});
             }
             else
             {
@@ -300,11 +314,14 @@ class interface__ : ::interface::detail::base
         }
     }
 
+    // owns_object checks if i has ownership of the pointed-to object.
+    // A default constructed object will also be non-owning naturally.
     [[nodiscard]] friend bool owns_object(const interface& i, ::interface::detail::tag) noexcept
     {
         return i._thunk.int_value();
     }
 
+    // owns_object sets the ownership of i of the pointed-to object.
     friend void owns_object(interface& i, bool val, ::interface::detail::tag) noexcept
     {
         i._thunk.int_value(val);
