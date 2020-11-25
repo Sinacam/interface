@@ -7,7 +7,8 @@ namespace interface
     namespace detail
     {
         using std::size_t;
-        // tag is used as an argument whenever a free function is an implementation detail.
+        // tag is used as an argument whenever a free function is an
+        // implementation detail.
         struct tag
         {
         };
@@ -28,15 +29,19 @@ namespace interface
 namespace interface::detail
 {
     template <typename T>
-    using enable_if_interface_t = std::enable_if_t<is_interface_v<std::decay_t<T>>, int>;
+    using enable_if_interface_t =
+        std::enable_if_t<is_interface_v<std::decay_t<T>>, int>;
 
     template <typename T>
-    using disable_if_interface_t = std::enable_if_t<!is_interface_v<std::decay_t<T>>, int>;
+    using disable_if_interface_t =
+        std::enable_if_t<!is_interface_v<std::decay_t<T>>, int>;
 
-    template<typename T>
-    using enable_if_copyable_t = std::enable_if_t<std::is_copy_constructible_v<std::decay_t<T>>, int>;
+    template <typename T>
+    using enable_if_copyable_t =
+        std::enable_if_t<std::is_copy_constructible_v<std::decay_t<T>>, int>;
 
-    // as_erased adds an additional void* as the first argument of function types.
+    // as_erased adds an additional void* as the first argument of function
+    // types.
     template <typename>
     struct as_erased;
 
@@ -49,7 +54,8 @@ namespace interface::detail
     template <typename T>
     using as_erased_t = typename as_erased<T>::type;
 
-    // thunk_t stores the copy constructor, destructor and size of a type in a type erased manner.
+    // thunk_t stores the copy constructor, destructor and size of a type in a
+    // type erased manner.
     struct thunk_t
     {
         void (*copy)(void* dst, const void* src);
@@ -73,9 +79,9 @@ namespace interface::detail
     };
     // clang-format on
 
-    // intptr_pair is a pointer-like type which steals the bottom bits as a small integer.
-    // intptr_pair makes no assumption of the platform except that alignment of function
-    // pointers is non-zero.
+    // intptr_pair is a pointer-like type which steals the bottom bits as a
+    // small integer. intptr_pair makes no assumption of the platform except
+    // that alignment of function pointers is non-zero.
     template <typename T>
     struct intptr_pair
     {
@@ -116,14 +122,16 @@ namespace interface::detail
     template <typename I>
     auto as_refs(I&& i)
     {
-        return std::forward_as_tuple(std::forward<I>(i)._objptr, std::forward<I>(i)._thunk,
+        return std::forward_as_tuple(std::forward<I>(i)._objptr,
+                                     std::forward<I>(i)._thunk,
                                      std::forward<I>(i)._vtable);
     }
 
     // raii_storage is unique_ptr for void* without the hassle.
     // raii_storage should only be used as local variables for exception safety.
     // raii_storage should never be members or passed around.
-    // Deallocate memory acquired from raii_storage with raii_storage::deallocate.
+    // Deallocate memory acquired from raii_storage with
+    // raii_storage::deallocate.
     struct raii_storage
     {
         raii_storage() = default;
@@ -141,12 +149,12 @@ namespace interface::detail
 
 // interface__ is "template" for the type created by INTERFACE.
 // interface__ will be replaced by an unique name.
-// Every appearance of SIGNATURE and METHOD_NAME will be replaced by multiple copies
-// of the same surrounding code, where each copy corresponds to the passed in
-// signatures and method names.
-// To avoid naming conflicts, there are only special member functions, member operators
-// and type aliases. All other functionality is provided through friend functions with
-// detail::tag as the last parameter to make them "private".
+// Every appearance of SIGNATURE and METHOD_NAME will be replaced by multiple
+// copies of the same surrounding code, where each copy corresponds to the
+// passed in signatures and method names. To avoid naming conflicts, there are
+// only special member functions, member operators and type aliases. All other
+// functionality is provided through friend functions with detail::tag as the
+// last parameter to make them "private".
 class interface__ : ::interface::detail::base
 {
     // This alias enables the keyword-like capability for self reference.
@@ -155,8 +163,8 @@ class interface__ : ::interface::detail::base
     template <typename I>
     friend auto ::interface::detail::as_refs(I&&);
 
-    // erased_METHOD_NAME::make deduces the signature and returns the type erased version
-    // of the method.
+    // erased_METHOD_NAME::make deduces the signature and returns the type
+    // erased version of the method.
     struct erased_METHOD_NAME
     {
         template <typename T, typename R, typename... Args>
@@ -172,11 +180,15 @@ class interface__ : ::interface::detail::base
   public:
     interface__() = default;
     interface__(interface&& other) noexcept { swap(*this, other); }
-    interface__(const interface& other) { construct(*this, other, ::interface::detail::tag{}); }
+    interface__(const interface& other)
+    {
+        construct(*this, other, ::interface::detail::tag{});
+    }
 
     // Converting constructor for all (non-strict) subset interfaces.
     template <typename I, ::interface::detail::enable_if_interface_t<I> = 0>
-    interface__(I&& other) noexcept(!::std::is_lvalue_reference_v<I> && !::std::is_const_v<I>)
+    interface__(I&& other) noexcept(!::std::is_lvalue_reference_v<I> &&
+                                    !::std::is_const_v<I>)
     {
         construct(*this, ::std::forward<I>(other), ::interface::detail::tag{});
     }
@@ -184,7 +196,7 @@ class interface__ : ::interface::detail::base
     // Converting constructor for any type satisfying the interface.
     // Non-pointers must by copy constructible.
     template <typename T, ::interface::detail::disable_if_interface_t<T> = 0,
-            ::interface::detail::enable_if_copyable_t<T> = 0>
+              ::interface::detail::enable_if_copyable_t<T> = 0>
     interface__(T&& x) noexcept(::std::is_pointer_v<::std::decay_t<T>>)
     {
         using dT = ::std::decay_t<T>;
@@ -206,7 +218,7 @@ class interface__ : ::interface::detail::base
         _thunk = &::interface::detail::thunk<rdT>;
 
         // Alias elaborated class name to avoid naming conflict.
-        using method = struct erased_METHOD_NAME;
+        using erased_METHOD_NAME = struct erased_METHOD_NAME;
         _vtable = {
             method::make<rdT>(::std::add_pointer_t<SIGNATURE>(nullptr)),
         };
@@ -261,14 +273,16 @@ class interface__ : ::interface::detail::base
     }
 
     template <typename... Args>
-    decltype(auto) METHOD_NAME(Args&&... args)
+    auto METHOD_NAME(Args&&... args)
+        -> decltype(get_METHOD_NAME(*this, ::interface::detail::tag{})(_objp, ::std::forward<Args>(args)...))
     {
         auto fn = get_METHOD_NAME(*this, ::interface::detail::tag{});
         return fn(_objptr, ::std::forward<Args>(args)...);
     }
 
   private:
-    using thunk_ptr = ::interface::detail::intptr_pair<const ::interface::detail::thunk_t>;
+    using thunk_ptr =
+        ::interface::detail::intptr_pair<const ::interface::detail::thunk_t>;
     using vtable_t = ::std::tuple<::interface::detail::as_erased_t<SIGNATURE>*>;
 
     void* _objptr = nullptr;
@@ -276,12 +290,13 @@ class interface__ : ::interface::detail::base
     vtable_t _vtable = {};
 
     template <typename I>
-    friend void construct(interface& self, I&& other,
-                          ::interface::detail::tag) noexcept(!::std::is_lvalue_reference_v<I> &&
-                                                             !::std::is_const_v<I>)
+    friend void
+    construct(interface& self, I&& other, ::interface::detail::tag) noexcept(
+        !::std::is_lvalue_reference_v<I> && !::std::is_const_v<I>)
     {
         // These are references, see as_refs.
-        auto [objptr, thunk, vtable] = ::interface::detail::as_refs(::std::forward<I>(other));
+        auto [objptr, thunk, vtable] =
+            ::interface::detail::as_refs(::std::forward<I>(other));
         if(!objptr)
             return;
 
@@ -316,18 +331,21 @@ class interface__ : ::interface::detail::base
 
     // owns_object checks if i has ownership of the pointed-to object.
     // A default constructed object will also be non-owning naturally.
-    [[nodiscard]] friend bool owns_object(const interface& i, ::interface::detail::tag) noexcept
+    [[nodiscard]] friend bool owns_object(const interface& i,
+                                          ::interface::detail::tag) noexcept
     {
         return i._thunk.int_value();
     }
 
     // owns_object sets the ownership of i of the pointed-to object.
-    friend void owns_object(interface& i, bool val, ::interface::detail::tag) noexcept
+    friend void owns_object(interface& i, bool val,
+                            ::interface::detail::tag) noexcept
     {
         i._thunk.int_value(val);
     }
 
-    friend auto get_METHOD_NAME(const interface& i, ::interface::detail::tag) noexcept
+    friend auto get_METHOD_NAME(const interface& i,
+                                ::interface::detail::tag) noexcept
     {
         return ::std::get<0>(i._vtable);
     }
